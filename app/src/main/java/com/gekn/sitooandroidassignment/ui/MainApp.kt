@@ -1,0 +1,131 @@
+package com.gekn.sitooandroidassignment.ui
+
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.EaseIn
+import androidx.compose.animation.core.EaseOut
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandIn
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.slideOut
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.unit.IntOffset
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.gekn.sitooandroidassignment.navigation.NavDest
+import com.gekn.sitooandroidassignment.ui.screens.productdetails.ProductDetailsScreen
+import com.gekn.sitooandroidassignment.ui.screens.products.ProductsScreen
+
+@Composable
+fun MainApp(
+) {
+
+    // Navigation
+    val navController: NavHostController = rememberNavController()
+
+    Surface {
+        NavHostView(
+            navController = navController
+        )
+    }
+
+}
+
+/**
+ * Navigate to a route
+ */
+fun navigate(navController: NavHostController, route: String) {
+    navController.navigate(route) {
+        // Pop up to the start destination of the graph to
+        // avoid building up a large stack of destinations
+        // on the back stack as users select items
+        popUpTo(navController.graph.findStartDestination().id) {
+            saveState = true
+        }
+        // Avoid multiple copies of the same destination when
+        // re-selecting the same item
+        launchSingleTop = true
+        // Restore state when re-selecting a previously selected item
+        restoreState = true
+    }
+}
+
+@Composable
+fun NavHostView(
+    navController: NavHostController
+) {
+    NavHost(
+        navController = navController,
+        startDestination = NavDest.Products.route
+    ) {
+        composable(
+            route = NavDest.Products.route,
+            enterTransition = {
+                fadeIn(
+                    animationSpec = tween(
+                        300, easing = LinearEasing
+                    )
+                ) + slideIntoContainer(
+                    animationSpec = tween(300, easing = EaseIn),
+                    towards = AnimatedContentTransitionScope.SlideDirection.Start
+                )
+            },
+            exitTransition = {
+                fadeOut(
+                    animationSpec = tween(
+                        300, easing = LinearEasing
+                    )
+                ) + slideOutOfContainer(
+                    animationSpec = tween(300, easing = EaseOut),
+                    towards = AnimatedContentTransitionScope.SlideDirection.End
+                )
+            }
+        ) {
+            ProductsScreen(
+                navigateToDetails = { id ->
+                    navigate(navController, "${NavDest.ProductDetails.route}/$id")
+                }
+            )
+        }
+        composable(
+            route = "${NavDest.ProductDetails.route}/{ITEM_ID}",
+            enterTransition = {
+                scaleIn(transformOrigin = TransformOrigin(0f, 0f)) +
+                        fadeIn() + expandIn(
+                    expandFrom = Alignment.BottomEnd
+                ) + slideIntoContainer(
+                    animationSpec = tween(300, easing = EaseIn),
+                    towards = AnimatedContentTransitionScope.SlideDirection.Start
+                )
+            },
+            exitTransition = {
+                slideOut(
+                    animationSpec = tween(300, easing = LinearEasing)
+                ) { fullSize ->
+                    IntOffset(0, fullSize.height)
+                } + slideOutOfContainer(
+                    animationSpec = tween(300, easing = EaseOut),
+                    towards = AnimatedContentTransitionScope.SlideDirection.End
+                )
+            }
+        ) {
+            val itemId = it.arguments?.getString("ITEM_ID")?.toIntOrNull()
+            ProductDetailsScreen(
+                productId = itemId,
+                onClose = {
+                    navController.popBackStack()
+                }
+            )
+        }
+    }
+
+}

@@ -1,0 +1,70 @@
+{
+  "totalcount": 13,
+  "items": [
+    {
+      "productid": 1,
+      "moneyprice": "161.00",
+      "title": "T-shirt x2"
+    },
+    {
+      "productid": 5,
+      "moneyprice": "480.00",
+      "title": "Pantalones"
+    },
+    {
+      "productid": 8,
+      "moneyprice": "0.00",
+      "title": "Shoes"
+    },
+    {
+      "productid": 9,
+      "moneyprice": "0.00",
+      "title": "Clothes"
+    },
+    {
+      "productid": 10,
+      "moneyprice": "0.00",
+      "title": "Other"
+    },
+    {
+      "productid": 12,
+      "moneyprice": "345.00",
+      "title": "Tasty Coffee"
+    },
+    {
+      "productid": 15,
+      "moneyprice": "590.00",
+      "title": "Alex Chino"
+    },
+    {
+      "productid": 21,
+      "moneyprice": "699.00",
+      "title": "Slim Jeans"
+    },
+    {
+      "productid": 22,
+      "moneyprice": "490.00",
+      "title": "Deco Coat"
+    },
+    {
+      "productid": 26,
+      "moneyprice": "449.00",
+      "title": "Cubic Blouse"
+    },
+    {
+      "productid": 31,
+      "moneyprice": "379.00",
+      "title": "Sirius Sweater"
+    },
+    {
+      "productid": 34,
+      "moneyprice": "249.00",
+      "title": "Solo T-Shirt"
+    },
+    {
+      "productid": 37,
+      "moneyprice": "1299.00",
+      "title": "Tina Dress"
+    }
+  ]
+}

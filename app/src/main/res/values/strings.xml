@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Sitoo Android Assignment</string>
+
+    <!-- Screens -->
+    <string name="screen_products">Products</string>
+    <string name="screen_product_details">ProductDetails</string>
+
+    <string name="retry">Retry</string>
+    <string name="back_button">Back</string>
+
+    <string name="internet_status_online">Back Online!</string>
+    <string name="internet_status_offline">No Internet Connection!</string>
+
+    <!-- Error Messages -->
+    <string name="error_invalid_product_id">The product id is invalid</string>
+    <string name="error_no_content_found">There was a problem loading content from server!</string>
+    <string name="error_no_internet_connection">No internet connection!</string>
+    <string name="test_tag_products_screen">tagProductsScreen</string>
+    <string name="test_tag_product_details_screen">tagProductDetailsScreen</string>
+    <string name="test_tag_products_list">tagProductsList</string>
+
+</resources>
