@@ -25,7 +25,7 @@ internal object NetworkModule {
 
     // Logging Interceptor
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
-        this.level = HttpLoggingInterceptor.Level.BODY
+        this.level = HttpLoggingInterceptor.Level.BASIC
     }
 
     // Basic Auth Interceptor
