@@ -4,31 +4,28 @@
 
 package com.gekn.sitooandroidassignment.ui.views
 
-import android.util.Log
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.VectorConverter
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.LoadStates
 import androidx.paging.PagingData
@@ -39,7 +36,9 @@ import com.gekn.sitooandroidassignment.domain.models.ProductResource
 import com.gekn.sitooandroidassignment.network.ConnectionState
 import com.gekn.sitooandroidassignment.network.utils.connectivityState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalCoroutinesApi::class)
 @Composable
@@ -49,24 +48,51 @@ fun ProductsList(
     onItemClicked: (id: Int) -> Unit = {}
 ) {
 
-    val refreshState = rememberPullToRefreshState()
-
-    if (refreshState.isRefreshing) {
-        LaunchedEffect(true) {
-            productsPagingItems.refresh()
-            refreshState.endRefresh()
-        }
-    }
-
     // This will cause re-composition on every network state change
     val connection by connectivityState()
     val isConnected = connection === ConnectionState.Available
 
-    Box(
-        Modifier.nestedScroll(refreshState.nestedScrollConnection)
+    // Pull to refresh state
+    var isRefreshing by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
+    val refreshState = remember {
+        object : PullToRefreshState {
+            private val anim = Animatable(0f, Float.VectorConverter)
+
+            override val distanceFraction
+                get() = anim.value
+
+            override suspend fun animateToThreshold() {
+                anim.animateTo(1f, spring(dampingRatio = Spring.DampingRatioHighBouncy))
+            }
+
+            override suspend fun animateToHidden() {
+                anim.animateTo(0f)
+            }
+
+            override suspend fun snapTo(targetValue: Float) {
+                anim.snapTo(targetValue)
+            }
+        }
+    }
+
+    val onRefresh: () -> Unit = {
+        isRefreshing = true
+        coroutineScope.launch {
+            productsPagingItems.refresh()
+            delay(1000L) // Without the delay the refresh indicator stays visible after refresh
+            isRefreshing = false
+        }
+    }
+
+    PullToRefreshBox(
+        modifier = modifier,
+        state = refreshState,
+        isRefreshing = isRefreshing,
+        onRefresh = onRefresh
     ) {
         LazyColumn(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .testTag(stringResource(id = R.string.test_tag_products_list)),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -79,17 +105,10 @@ fun ProductsList(
             items(
                 count = productsPagingItems.itemCount,
                 itemContent = { item ->
-                    Column(
-                        modifier = Modifier
-                            .wrapContentHeight()
-                            .fillMaxWidth()
-                            .padding(start = 16.dp, end = 16.dp)
-                            .clickable { onItemClicked(productsPagingItems[item]!!.id) },
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Top
-                    ) {
-                        ProductCard(product = productsPagingItems[item]!!)
-                    }
+                    ProductCard(
+                        product = productsPagingItems[item]!!,
+                        onClick = { onItemClicked(productsPagingItems[item]!!.id) }
+                    )
                 }
             )
 
@@ -101,7 +120,6 @@ fun ProductsList(
 
                     loadState.refresh is LoadState.Error -> {
                         val error = productsPagingItems.loadState.refresh as LoadState.Error
-                        Log.e("ProductsList", "LoadState.Error: ${error.error}")
                         item {
                             EmptyList(
                                 onRetry = { productsPagingItems.refresh() }
@@ -115,7 +133,6 @@ fun ProductsList(
 
                     loadState.append is LoadState.Error -> {
                         val error = productsPagingItems.loadState.append as LoadState.Error
-                        Log.e("ProductsList", "LoadState.Error: ${error.error}")
                         item {
                             EmptyList(
                                 onRetry = { productsPagingItems.refresh() }
@@ -127,12 +144,6 @@ fun ProductsList(
 
         }
 
-        PullToRefreshContainer(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .offset(y = (60).dp),
-            state = refreshState
-        )
     }
 
 }
@@ -159,7 +170,8 @@ fun ProductsListPreview() {
                     prepend = LoadState.NotLoading(false),
                 ),
             ),
-        ).collectAsLazyPagingItems()
+        ).collectAsLazyPagingItems(),
+        onItemClicked = {}
     )
 
 }

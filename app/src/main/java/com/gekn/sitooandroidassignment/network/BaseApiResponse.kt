@@ -14,12 +14,15 @@ interface BaseApiResponse {
     suspend fun <T> safeApiCall(execute: suspend () -> Response<T>): NetworkResult<T?> {
         return try {
             val response = execute()
+
             if (response.isSuccessful) {
                 val body = response.body()
+
                 NetworkResult.Success(body)
             } else {
                 error(response.code(), response.message())
             }
+
         } catch (e: HttpException) {
             error(e.message ?: e.toString())
         }

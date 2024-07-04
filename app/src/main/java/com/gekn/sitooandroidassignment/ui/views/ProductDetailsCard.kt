@@ -22,7 +22,7 @@ fun ProductDetailsCard(
     product: ProductDetailsResource
 ) {
     Card(
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onSecondary),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(
             topStart = 12.dp,
@@ -243,7 +243,7 @@ fun ProductDetailsCardPreview() {
             vatId = 12,
             deliveryClassId = 11,
             defaultCategoryId = 666,
-            categories = emptyList(),
+            categories = listOf(21, 12, 666, 4355),
             manufacturerId = "id",
             manufacturerUrl = "url",
             custom1 = "custom1",
@@ -255,10 +255,10 @@ fun ProductDetailsCardPreview() {
             stockAllowBackOrder = true,
             variantParentId = 0,
             barcode = "",
-            barcodeAliases = emptyList(),
-            similar = emptyList(),
-            related = listOf(0),
-            accessories = listOf(0, 0),
+            barcodeAliases = listOf("Barcode", "Lorem Ipsum"),
+            similar = listOf(12, 66, 45, 444),
+            related = listOf(0, 1, 2, 3),
+            accessories = listOf(10, 10),
             offerIsActive = true,
             moneyFinalPrice = "2121",
             vatValue = 2,

@@ -19,20 +19,22 @@ import com.gekn.sitooandroidassignment.domain.models.ProductResource
 
 @Composable
 fun ProductCard(
-    product: ProductResource
+    product: ProductResource,
+    onClick: () -> Unit
 ) {
     Card(
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onSecondary),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
+        onClick = onClick,
         modifier = Modifier
             .wrapContentHeight()
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
+            .padding(vertical = 8.dp, horizontal = 16.dp)
     ) {
         Column(
             modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
+                .padding(16.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start
         ) {
@@ -52,7 +54,8 @@ fun ProductCard(
 @Composable
 fun ProductCardPreview() {
     ProductCard(
-        product = ProductResource(1, "Product Abra Kadabra", "565.00")
+        product = ProductResource(1, "Product Abra Kadabra", "565.00"),
+        onClick = {}
     )
 
 }

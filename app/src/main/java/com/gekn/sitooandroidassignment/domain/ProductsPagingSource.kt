@@ -8,6 +8,7 @@ import com.gekn.sitooandroidassignment.domain.models.ProductResource
 import com.gekn.sitooandroidassignment.network.ApiService
 import com.gekn.sitooandroidassignment.network.BaseApiResponse
 import com.gekn.sitooandroidassignment.network.NetworkResult
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 class ProductsPagingSource(
     private val apiService: ApiService,
@@ -23,17 +24,19 @@ class ProductsPagingSource(
     /**
      * Fetches the next items range from the API based on nextKey
      */
+    @OptIn(ExperimentalCoroutinesApi::class)
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ProductResource> {
+
         return try {
+
             val start = params.key ?: 0
 
-            val response = safeApiCall { apiService.getProducts(
+            val response = safeApiCall {
+                apiService.getProducts(
                     start = start,
                     num = params.loadSize
                 )
             }
-
-            Log.d("ProductsPagingSource", "Response: $response.body")
 
             when (response) {
                 is NetworkResult.Success -> {
@@ -49,10 +52,12 @@ class ProductsPagingSource(
 
                     LoadResult.Page(
                         data = products ?: emptyList(),
-                        prevKey = if (start > 0) start - params.loadSize else null, // Calculate previous key
+                        // Calculate previous key and ensure start is not less than 0
+                        prevKey = if (start > 0) maxOf(start - params.loadSize, 0) else null,
                         nextKey = nextKey
                     )
                 }
+
                 is NetworkResult.Error -> {
                     throw Exception(response.message)
                 }

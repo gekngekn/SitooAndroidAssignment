@@ -6,6 +6,7 @@ import com.gekn.sitooandroidassignment.network.models.NetworkProducts
 import com.gekn.sitooandroidassignment.network.models.NetworkSite
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Headers
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -13,6 +14,10 @@ interface ApiService {
 
     @GET("sites/1/products.json?&fields=productid,title,moneyprice")
     suspend fun getProducts(@Query("start") start: Int, @Query("num") num: Int): Response<NetworkProducts>
+
+    @GET("sites/1/products.json?&fields=productid,title,moneyprice")
+    @Headers("Cache-Control: no-cache")
+    suspend fun getProductsRefresh(@Query("start") start: Int, @Query("num") num: Int): Response<NetworkProducts>
 
     @GET("sites/1/products/{id}.json")
     suspend fun getProductDetails(@Path("id") id: Int): Response<NetworkProductDetails>

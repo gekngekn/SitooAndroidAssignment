@@ -7,5 +7,5 @@ import kotlinx.coroutines.flow.Flow
 
 data class ProductsScreenState(
     val appState: AppState,
-    val products: Flow<PagingData<ProductResource>>
+    val products: Flow<PagingData<ProductResource>>,
 )

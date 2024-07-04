@@ -15,6 +15,8 @@
     <string name="error_invalid_product_id">The product id is invalid</string>
     <string name="error_no_content_found">There was a problem loading content from server!</string>
     <string name="error_no_internet_connection">No internet connection!</string>
+
+    <!-- Test Tags -->
     <string name="test_tag_products_screen">tagProductsScreen</string>
     <string name="test_tag_product_details_screen">tagProductDetailsScreen</string>
     <string name="test_tag_products_list">tagProductsList</string>

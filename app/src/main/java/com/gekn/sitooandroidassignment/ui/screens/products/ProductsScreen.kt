@@ -1,7 +1,6 @@
 package com.gekn.sitooandroidassignment.ui.screens.products
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
@@ -67,8 +66,7 @@ fun ProductsContent(
     onProductClicked: (id: Int) -> Unit
 ) {
     ProductsList(
-        modifier = modifier
-            .wrapContentSize(),
+        modifier = modifier,
         products,
         onItemClicked = onProductClicked
     )

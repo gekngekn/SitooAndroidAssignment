@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductsViewModel @Inject constructor(
-    repository: ProductsPagingPagingRepositoryImpl
+    private val repository: ProductsPagingPagingRepositoryImpl
 ) : ViewModel() {
 
     private val _uiProductsState = MutableStateFlow(
