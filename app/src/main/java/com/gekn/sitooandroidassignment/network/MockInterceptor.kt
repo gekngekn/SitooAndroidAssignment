@@ -19,10 +19,6 @@ class MockInterceptor(private val context: Context) : Interceptor {
             Log.d("MockInterceptor", "Received request for products.json")
             val json = readJSONFromAssets(context, "mockProductsData.json")
 
-
-
-            Log.d("MockInterceptor", "Response: $json")
-
             return chain.proceed(chain.request())
                 .newBuilder()
                 .code(200)
@@ -34,12 +30,6 @@ class MockInterceptor(private val context: Context) : Interceptor {
                 )
                 .addHeader("content-type", "application/json")
                 .build()
-
-
-//        } else if (chain.request().url.toUri().toString().endsWith("groups")) {
-//            Log.d("MockInterceptor", "Received request for groups")
-//
-
         } else {
 
             // Continue handling the request

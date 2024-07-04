@@ -6,13 +6,8 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 
 fun readJSONFromAssets(context: Context, path: String): String {
-    val identifier = "[ReadJSON]"
     try {
         val file = context.assets.open(path)
-        Log.i(
-            identifier,
-            "EventSucceeded Found File: $file.",
-        )
         val bufferedReader = BufferedReader(InputStreamReader(file))
         val stringBuilder = StringBuilder()
         bufferedReader.useLines { lines ->
@@ -20,20 +15,13 @@ fun readJSONFromAssets(context: Context, path: String): String {
                 stringBuilder.append(it)
             }
         }
-        Log.i(
-            identifier,
-            "getJSON  EventSucceeded stringBuilder: $stringBuilder.",
-        )
-        val jsonString = stringBuilder.toString()
-        Log.i(
-            identifier,
-            "EventSucceeded JSON as String: $jsonString.",
-        )
-        return jsonString
+
+        return stringBuilder.toString()
+
     } catch (e: Exception) {
         Log.e(
-            identifier,
-            "EventFailed Error reading JSON: $e.",
+            "readJSONFromAssets",
+            "Error reading JSON: $e.",
         )
         e.printStackTrace()
         return ""
