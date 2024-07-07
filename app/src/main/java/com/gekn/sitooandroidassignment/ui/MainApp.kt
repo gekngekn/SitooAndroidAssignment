@@ -5,16 +5,10 @@ import androidx.compose.animation.core.EaseIn
 import androidx.compose.animation.core.EaseOut
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandIn
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
+import androidx.compose.animation.slideIn
 import androidx.compose.animation.slideOut
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.unit.IntOffset
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -68,27 +62,7 @@ fun NavHostView(
         startDestination = NavDest.Products.route
     ) {
         composable(
-            route = NavDest.Products.route,
-            enterTransition = {
-                fadeIn(
-                    animationSpec = tween(
-                        300, easing = LinearEasing
-                    )
-                ) + slideIntoContainer(
-                    animationSpec = tween(300, easing = EaseIn),
-                    towards = AnimatedContentTransitionScope.SlideDirection.Start
-                )
-            },
-            exitTransition = {
-                fadeOut(
-                    animationSpec = tween(
-                        300, easing = LinearEasing
-                    )
-                ) + slideOutOfContainer(
-                    animationSpec = tween(300, easing = EaseOut),
-                    towards = AnimatedContentTransitionScope.SlideDirection.End
-                )
-            }
+            route = NavDest.Products.route
         ) {
             ProductsScreen(
                 navigateToDetails = { id ->
@@ -99,10 +73,11 @@ fun NavHostView(
         composable(
             route = "${NavDest.ProductDetails.route}/{ITEM_ID}",
             enterTransition = {
-                scaleIn(transformOrigin = TransformOrigin(0f, 0f)) +
-                        fadeIn() + expandIn(
-                    expandFrom = Alignment.BottomEnd
-                ) + slideIntoContainer(
+                slideIn(
+                    animationSpec = tween(300, easing = LinearEasing)
+                ) { fullSize ->
+                    IntOffset(fullSize.width, 0)
+                } + slideIntoContainer(
                     animationSpec = tween(300, easing = EaseIn),
                     towards = AnimatedContentTransitionScope.SlideDirection.Start
                 )

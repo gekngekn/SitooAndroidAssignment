@@ -8,12 +8,8 @@ import com.gekn.sitooandroidassignment.domain.ProductsPagingSource
 import com.gekn.sitooandroidassignment.domain.models.ProductResource
 import com.gekn.sitooandroidassignment.network.ApiService
 import com.gekn.sitooandroidassignment.network.BaseApiResponse
-import com.gekn.sitooandroidassignment.network.NetworkResult
-import com.gekn.sitooandroidassignment.network.models.NetworkProduct
-import com.gekn.sitooandroidassignment.network.models.NetworkProducts
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.MockK
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Before

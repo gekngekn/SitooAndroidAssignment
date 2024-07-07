@@ -2,7 +2,7 @@ package com.gekn.sitooandroidassignment.network.di
 
 import android.content.Context
 import com.gekn.sitooandroidassignment.network.ApiService
-import com.gekn.sitooandroidassignment.network.MockInterceptor
+import com.gekn.sitooandroidassignment.network.interceptors.MockInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.android.qualifiers.ApplicationContext

@@ -1,16 +1,17 @@
 package com.gekn.sitooandroidassignment.network.interceptors
 
-import android.util.Log
 import okhttp3.CacheControl
 import okhttp3.Interceptor
 import okhttp3.Response
 import java.util.concurrent.TimeUnit
 
-class CacheInterceptor : Interceptor {
+class CacheInterceptor() : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val response: Response = chain.proceed(chain.request())
+
+        // Cache response for 30 minutes
         val cacheControl = CacheControl.Builder()
-            .maxAge(10, TimeUnit.DAYS)
+            .maxAge(30, TimeUnit.MINUTES)
             .build()
 
         return response.newBuilder()

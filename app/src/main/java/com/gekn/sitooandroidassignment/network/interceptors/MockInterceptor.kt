@@ -1,4 +1,4 @@
-package com.gekn.sitooandroidassignment.network
+package com.gekn.sitooandroidassignment.network.interceptors
 
 import android.content.Context
 import android.util.Log

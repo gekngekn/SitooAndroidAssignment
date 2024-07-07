@@ -1,19 +1,22 @@
 package com.gekn.sitooandroidassignment.network.di
 
+import android.content.Context
 import com.gekn.sitooandroidassignment.BuildConfig
 import com.gekn.sitooandroidassignment.network.ApiService
+import com.gekn.sitooandroidassignment.network.interceptors.BasicAuthInterceptor
+import com.gekn.sitooandroidassignment.network.interceptors.CacheInterceptor
+import com.gekn.sitooandroidassignment.network.interceptors.ForceCacheInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import okhttp3.Credentials
-import okhttp3.Interceptor
+import okhttp3.Cache
 import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.File
 import javax.inject.Singleton
 
 @Module
@@ -25,27 +28,18 @@ internal object NetworkModule {
 
     // Logging Interceptor
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
-        this.level = HttpLoggingInterceptor.Level.BASIC
-    }
-
-    // Basic Auth Interceptor
-    class BasicAuthInterceptor(username: String, password: String) : Interceptor {
-        private val credentials: String = Credentials.basic(username, password)
-
-        override fun intercept(chain: Interceptor.Chain): Response {
-            val request: Request = chain.request()
-            val authenticatedRequest: Request = request.newBuilder()
-                .header("Authorization", credentials).build()
-            return chain.proceed(authenticatedRequest)
-        }
+        this.level = HttpLoggingInterceptor.Level.BODY
     }
 
     @Singleton
     @Provides
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideOkHttpClient(@ApplicationContext context: Context): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
             .addInterceptor(BasicAuthInterceptor(BuildConfig.API_USER, BuildConfig.API_PASS))
+            .addNetworkInterceptor(CacheInterceptor())
+            .addInterceptor(ForceCacheInterceptor(context))
+            .cache(Cache(File(context.cacheDir, "http-cache"), 5L * 1024L * 1024L)) // 5mb
             .build()
     }
 
